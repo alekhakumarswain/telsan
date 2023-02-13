@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Firebase Login/Sign Up Page</title>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+  	<style type="text/css">
+  		body {
+  		font-family: sans-serif;
+  		}
+  		
+  		#login-container,
+  		#signup-container {
+  		max-width: 500px;
+  		margin: 0 auto;
+  		text-align: center;
+  		}
+  		
+  		@media (max-width: 700px) {
+  		#login-container,
+  		#signup-container {
+  		width: 90%;
+  		}
+  		}
+  		
+  		h1 {
+  		margin-top: 50px;
+  		}
+  		
+  		form {
+  		display: inline-block;
+  		margin-top: 30px;
+  		text-align: left;
+  		}
+  		
+  		input[type="email"],
+  		input[type="password"] {
+  		width: 100%;
+  		padding: 10px;
+  		margin-bottom: 20px;
+  		border: 1px solid #ccc;
+  		border-radius: 5px;
+  		font-size: 16px;
+  		}
+  		
+  		button {
+  		width: 100%;
+  		padding: 10px;
+  		background-color: #4CAF50;
+  		color: white;
+  		font-size: 16px;
+  		border: none;
+  		border-radius: 5px;
+  		cursor: pointer;
+  		}
+  		
+  		button:hover {
+  		background-color: #3e8e41;
+  		}
+  		#signup-container {
+  		display: none;
+  		}
+  		
+  		#login-container {
+  		display: block;
+  		}
+  		
+  	</style>
+  </head>
+  <body>
+    <div id="login-container">
+      <h1>Login</h1>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button id="login-button">Login</button>
+        <b id="create">CREATE AN ACCOUNT</b>
+      </form>
+    </div>
+    <div id="signup-container">
+      <h1>Sign Up</h1>
+      <form id="signup-form">
+        <input type="email" id="signup-email" placeholder="Email">
+        <input type="password" id="signup-password" placeholder="Password">
+        <button id="signup-button">Sign Up</button>
+        <b id="login">ALREADY HAVE AN ACCOUNT</b>
+      </form>
+    </div>
+  </body>
+  <script type="text/javascript">
+  	// Get references to the buttons
+  	var loginButton = document.getElementById("login");
+  	var signupButton = document.getElementById("create");
+  	
+  	// Handle the login button click
+  	loginButton.addEventListener("click", function() {
+  	// Hide the sign up container
+  	document.getElementById("signup-container").style.display = "none";
+  	// Show the login container
+  	document.getElementById("login-container").style.display = "block";
+  	});
+  	
+  	// Handle the sign up button click
+  	signupButton.addEventListener("click", function() {
+  	// Hide the login container
+  	document.getElementById("login-container").style.display = "none";
+  	// Show the sign up container
+  	document.getElementById("signup-container").style.display = "block";
+  	});
+  	
+  </script>
+  <script>
+  	import { initializeApp } from "firebase/app";
+  	import { getAnalytics } from "firebase/analytics";
+    // Your Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+      authDomain: "telsan.firebaseapp.com",
+      databaseURL: "https://telsan.firebaseio.com",
+      projectId: "telsan",
+      storageBucket: "telsan.appspot.com",
+      messagingSenderId: "234399782199",
+      appId: "1:234399782199:web:b2cd11850ffe6e7404b6b2",
+      measurementId: "G-5XRY91SPCN"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+	firebase.getAnalytics(app);
+    // Get references to the login and sign up forms
+    var loginForm = document.getElementById("login-form");
+    var signupForm = document.getElementById("signup-form");
+    // Get references to the input fields
+    var loginEmail = document.getElementById("login-email");
+    var loginPassword = document.getElementById("login-password");
+    var signupEmail = document.getElementById("signup-email");
+    var signupPassword = document.getElementById("signup-password");
+    // Get references to the buttons
+    var loginButton = document.getElementById("login-button");
+    var signupButton = document.getElementById("signup-button");
+
+    // Handle the login
+    loginButton.addEventListener("click", function(e) {
+    e.preventDefault();
+    firebase
+    .auth()
+    .signInWithEmailAndPassword(loginEmail.value, loginPassword.value)
+    .then(function(user) {
+    console.log("User logged in successfully:", user);
+    })
+    .catch(function(error) {
+    console.error("Error logging in user:", error);
+    });
+    });
+    
+    // Handle the sign up
+    signupButton.addEventListener("click", function(e) {
+    e.preventDefault();
+    firebase
+    .auth()
+    .createUserWithEmailAndPassword(signupEmail.value, signupPassword.value)
+    .then(function(user) {
+    console.log("User created and logged in successfully:", user);
+    })
+    .catch(function(error) {
+    console.error("Error creating user:", error);
+    });
+    });
+   </script>
+</html>
