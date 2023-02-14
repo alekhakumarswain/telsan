@@ -111,9 +111,7 @@
   	
   </script>
   <script>
-  	import { initializeApp } from "firebase/app";
-  	import { getAnalytics } from "firebase/analytics";
-    // Your Firebase configuration
+   // Your Firebase configuration
     var firebaseConfig = {
       apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
       authDomain: "telsan.firebaseapp.com",
@@ -126,7 +124,6 @@
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-	firebase.getAnalytics(app);
     // Get references to the login and sign up forms
     var loginForm = document.getElementById("login-form");
     var signupForm = document.getElementById("signup-form");
