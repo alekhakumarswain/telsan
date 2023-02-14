@@ -148,6 +148,7 @@
     })
     .catch(function(error) {
     console.error("Error logging in user:", error);
+    alert(error);
     });
     });
     
@@ -160,9 +161,11 @@
     .then(function(user) {
     console.log("User created and logged in successfully:", user);
     window.location = "https://sufev.blogspot.com";
+    alert(user);
     })
     .catch(function(error) {
     console.error("Error creating user:", error);
+    alert(error);
     });
     });
    </script>
