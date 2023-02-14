@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>Chat Application</title>
+    <!-- Include Firebase Library -->
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <style>
+    /* Login Form */
+    #loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    }
+    
+    #loginForm input[type="email"],
+    #loginForm input[type="password"] {
+    width: 50%;
+    padding: 10px;
+    margin: 10px;
+    font-size: 18px;
+    }
+    
+    #loginForm button {
+    width: 50%;
+    padding: 10px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    }
+    
+    /* Homepage */
+    #homePage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    }
+    
+    #homePage h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    }
+    
+    #homePage p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    }
+    
+    #homePage #chatbox {
+    width: 50%;
+    height: 50%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    }
+    
+    #homePage input[type="text"] {
+    width: 50%;
+    padding: 10px;
+    margin: 10px;
+    font-size: 18px;
+    }
+    
+    #homePage button {
+    width: 50%;
+    padding: 10px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    }
+    </style>
+    
+  </head>
+  <body>
+    <!-- Login Form -->
+    <div id="loginForm">
+      <input type="email" id="email" placeholder="Email Address">
+      <input type="password" id="password" placeholder="Password">
+      <button id="loginButton">Login</button>
+    </div>
+    <!-- Chat Application Homepage -->
+    <div id="homePage" style="display: none;">
+      <h1>Welcome to the Chat Application</h1>
+      <p>You are logged in as <span id="username"></span></p>
+      <div id="chatbox">
+        <!-- Chat Messages -->
+      </div>
+      <input type="text" id="messageInput">
+      <button id="sendButton">Send</button>
+    </div>
+    <!-- Firebase Configuration -->
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+      apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+      authDomain: "telsan.firebaseapp.com",
+      databaseURL: "https://telsan.firebaseio.com",
+      projectId: "telsan",
+      storageBucket: "telsan.appspot.com",
+      messagingSenderId: "234399782199",
+      appId: "1:234399782199:web:b2cd11850ffe6e7404b6b2",
+      measurementId: "G-5XRY91SPCN"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <!-- Firebase Authentication -->
+    <script>
+      // Get UI Elements
+      var loginButton = document.getElementById("loginButton");
+      var email = document.getElementById("email");
+      var password = document.getElementById("password");
+      var homePage = document.getElementById("homePage");
+      var username = document.getElementById("username");
+      // Login Event Listener
+      loginButton.addEventListener("click", function() {
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(email.value, password.value)
+          .then(function(user) {
+            homePage.style.display = "block";
+            username.innerHTML = user.email;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+      });
+    </script>
+  </body>
+</html>
