@@ -147,6 +147,7 @@
     .signInWithEmailAndPassword(loginEmail.value, loginPassword.value)
     .then(function(user) {
     console.log("User logged in successfully:", user);
+    window.location = "https://sufev.blogspot.com";
     })
     .catch(function(error) {
     console.error("Error logging in user:", error);
@@ -161,6 +162,7 @@
     .createUserWithEmailAndPassword(signupEmail.value, signupPassword.value)
     .then(function(user) {
     console.log("User created and logged in successfully:", user);
+    window.location = "https://sufev.blogspot.com";
     })
     .catch(function(error) {
     console.error("Error creating user:", error);
