@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+<style type="text/css">
+	body {
+	font-family: Arial, sans-serif;
+	background-color: #F5F5F5;
+	margin: 0;
+	padding: 0;
+	}
+	
+	#chatroom {
+	width: 80%;
+	margin: auto;
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	box-shadow: 2px 2px 5px #CCCCCC;
+	}
+	
+	#messages {
+	list-style: none;
+	padding: 20px;
+	height: 400px;
+	overflow-y: scroll;
+	}
+	
+	.message {
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #F0F0F0;
+	border-radius: 5px;
+	}
+	
+	input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	}
+	
+	input[type="submit"] {
+	background-color: #4CAF50;
+	color: #FFFFFF;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	}
+	
+	input[type="submit"]:hover {
+	background-color: #3E8E41;
+	}
+	
+</style>
+</head>
+<body>
+	<div id="chatroom">
+	<div id="messages"></div>
+	<input id="message" type="text">
+	<button id="send">Send</button>
+	</div>
+	
+</body>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+    authDomain: "telsan.firebaseapp.com",
+    databaseURL: "https://telsan.firebaseio.com",
+    projectId: "telsan",
+    storageBucket: "telsan.appspot.com",
+    messagingSenderId: "234399782199",
+    appId: "1:234399782199:web:b2cd11850ffe6e7404b6b2",
+    measurementId: "G-5XRY91SPCN"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+    
+  // Get references to the elements
+  var messages = document.getElementById("messages");
+  var message = document.getElementById("message");
+  var send = document.getElementById("send");
+  
+  // Get a reference to the Firebase database
+  var database = firebase.firestore();
+  
+  // Send a message
+  send.addEventListener("click", function() {
+  database.collection("messages").add({
+  message: message.value
+  });
+  message.value = "";
+  });
+  
+  // Receive messages
+  database.collection("messages").onSnapshot(function(snapshot) {
+  snapshot.docChanges().forEach(function(change) {
+  if (change.type === "added") {
+  var newMessage = change.doc.data().message;
+  var messageDiv = document.createElement("div");
+  messageDiv.innerText = newMessage;
+  messages.appendChild(messageDiv);
+  }
+  });
+  });
+  </script>
+  
+
+
+</html>
