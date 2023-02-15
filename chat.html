@@ -94,13 +94,15 @@
   var database = firebase.firestore();
   
   // Send a message
-  send.addEventListener("click", function() {
-  database.collection("messages").add({
-  message: message.value,
-  timestamp: firebase.firestore.FieldValue.serverTimestamp() // add timestamp to message
-  });
-  message.value = "";
-  });
+ database.collection("messages").orderBy("timestamp").onSnapshot(function(snapshot) {
+ messages.innerHTML = ""; // Clear the chatroom
+ snapshot.forEach(function(doc) {
+ var messageDiv = document.createElement("div");
+ messageDiv.innerText = doc.data().message;
+ messages.appendChild(messageDiv);
+ });
+ });
+ 
   
   // Receive messages
   database.collection("messages").orderBy("timestamp") // order messages by timestamp
