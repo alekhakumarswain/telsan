@@ -178,7 +178,7 @@
         const message = {
           sender: user.displayName, // use the user's display name instead of email
           content: content,
-          timestamp: timestamp
+          timestamp: timestamp 
         };
         firebase.database().ref('messages').push(message);
 		messageInput.value = '';
@@ -242,6 +242,7 @@
 		inputForm.style.display = 'block';
 		} else {
 		console.log('User is logged out');
+alert('Signout');
 		loginForm.style.display = 'block';
 		signupForm.style.display = 'block';
 		logoutButton.style.display = 'none';
