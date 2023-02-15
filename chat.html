@@ -96,13 +96,15 @@
   // Send a message
   send.addEventListener("click", function() {
   database.collection("messages").add({
-  message: message.value
+  message: message.value,
+  timestamp: firebase.firestore.FieldValue.serverTimestamp() // add timestamp to message
   });
   message.value = "";
   });
   
   // Receive messages
-  database.collection("messages").onSnapshot(function(snapshot) {
+  database.collection("messages").orderBy("timestamp") // order messages by timestamp
+  .onSnapshot(function(snapshot) {
   snapshot.docChanges().forEach(function(change) {
   if (change.type === "added") {
   var newMessage = change.doc.data().message;
@@ -112,6 +114,7 @@
   }
   });
   });
+  
   </script>
   
 
