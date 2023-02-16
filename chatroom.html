@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="style.css" />
+    <style type="text/css">
+    	* {
+    	box-sizing: border-box;
+    	margin: 0;
+    	padding: 0;
+    	}
+    	
+    	body {
+    	font-family: sans-serif;
+    	}
+    	
+    	#chat-container {
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: space-between;
+    	align-items: center;
+    	height: 100vh;
+    	}
+    	
+    	#chat-header {
+    	background-color: #333;
+    	color: #fff;
+    	width: 100%;
+    	padding: 1rem;
+    	text-align: center;
+    	}
+    	
+    	#chat-messages {
+    	display: flex;
+    	flex-direction: column;
+    	align-items: flex-start;
+    	width: 100%;
+    	height: 100%;
+    	padding: 1rem;
+    	overflow-y: auto;
+    	}
+    	
+    	.message-container {
+    	display: flex;
+    	flex-direction: column;
+    	align-items: flex-start;
+    	margin-bottom: 1rem;
+    	}
+    	
+    	.message-info {
+    	font-size: 0.8rem;
+    	margin-bottom: 0.2rem;
+    	}
+    	
+    	.message-content {
+    	background-color: #f4f4f4;
+    	border-radius: 5px;
+    	padding: 0.5rem;
+    	}
+    	
+    	#chat-form {
+    	display: flex;
+    	justify-content: center;
+    	align-items: center;
+    	width: 100%;
+    	padding: 1rem;
+    	background-color: #f4f4f4;
+    	border-top: 1px solid #333;
+    	}
+    	
+    	#message-input {
+    	flex: 1;
+    	padding: 0.5rem;
+    	border-radius: 5px;
+    	border: none;
+    	margin-right: 1rem;
+    	}
+    	
+    	button[type="submit"] {
+    	padding: 0.5rem 1rem;
+    	background-color: #333;
+    	color: #fff;
+    	border: none;
+    	border-radius: 5px;
+    	cursor: pointer;
+    	}
+    	
+    	button[type="submit"]:hover {
+    	background-color: #555;
+    	}
+    	
+    </style>
+  </head>
+  <body>
+    <div id="chat-container">
+      <div id="chat-header">
+        <h1>Chat Room</h1>
+      </div>
+      <div id="chat-messages"></div>
+      <form id="chat-form">
+        <input type="text" id="message-input" placeholder="Type your message" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    <script src="script.js">
+    	// Initialize Firebase
+    	var config = {
+    	apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+    	authDomain: "telsan.firebaseapp.com",
+    	databaseURL: "https://telsan.firebaseio.com",
+    	projectId: "telsan",
+    	storageBucket: "telsan.appspot.com",
+    	messagingSenderId: "234399782199",
+    	appId: "1:234399782199:web:b2cd11850ffe6e7404b6b2",
+    	};
+    	firebase.initializeApp(config);
+    	
+    	// Get a reference to the database service
+    	var database = firebase.database();
+    	
+    	// Get a reference to the chat messages section
+    	var chatMessages = document.getElementById('chat-messages');
+    	
+    	// Function to send a new message to the database
+    	function sendMessage() {
+    	// Get the username and message text
+    	var username = document.getElementById('username').value;
+    	var message = document.getElementById('message').value;
+    	
+    	// Get the current time
+    	var timestamp = new Date().getTime();
+    	
+    	// Push the new message to the database
+    	database.ref('messages').push({
+    	username: username,
+    	message: message,
+    	timestamp: timestamp
+    	});
+    	
+    	// Clear the message input field
+    	document.getElementById('message').value = '';
+    	}
+    	
+    	// Function to display the chat messages
+    	function displayChatMessages() {
+    	// Clear the chat messages section
+    	chatMessages.innerHTML = '';
+    	
+    	// Get the last 100 messages from the database
+    	var messagesRef = database.ref('messages').orderByChild('timestamp').limitToLast(100);
+    	messagesRef.on('child_added', function(snapshot) {
+    	// Get the message data
+    	var data = snapshot.val();
+    	
+    	// Create a new message element
+    	var messageElement = document.createElement('div');
+    	messageElement.classList.add('message');
+    	
+    	// Create a new username element
+    	var usernameElement = document.createElement('span');
+    	usernameElement.classList.add('username');
+    	usernameElement.textContent = data.username + ': ';
+    	
+    	// Create a new message text element
+    	var messageTextElement = document.createElement('span');
+    	messageTextElement.classList.add('message-text');
+    	messageTextElement.textContent = data.message;
+    	
+    	// Create a new timestamp element
+    	var timestampElement = document.createElement('span');
+    	timestampElement.classList.add('timestamp');
+    	timestampElement.textContent = new Date(data.timestamp).toLocaleTimeString();
+    	
+    	// Add the username, message text, and timestamp elements to the message element
+    	messageElement.appendChild(usernameElement);
+    	messageElement.appendChild(messageTextElement);
+    	messageElement.appendChild(timestampElement);
+    	
+    	// Add the message element to the chat messages section
+    	chatMessages.appendChild(messageElement);
+    	
+    	// Scroll to the bottom of the chat messages section
+    	chatMessages.scrollTop = chatMessages.scrollHeight;
+    	});
+    	}
+    	
+    	// Call the displayChatMessages function to display the chat messages
+    	displayChatMessages();
+    	
+    </script>
+  </body>
+</html>
