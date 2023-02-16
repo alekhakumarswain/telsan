@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+	<style type="text/css">
+		body {
+		background-color: #111;
+		font-family: 'Inconsolata', monospace;
+		font-size: 16px;
+		color: #00ff00;
+		text-align: center;
+		}
+		
+		h1 {
+		font-size: 24px;
+		font-weight: normal;
+		margin: 0 0 20px;
+		}
+		
+		form {
+		display: inline-block;
+		text-align: left;
+		border: 1px solid #aaa;
+		padding: 20px;
+		margin: 20px;
+		border-radius: 5px;
+		}
+		
+		label {
+		display: block;
+		margin: 0 0 10px;
+		font-size: 14px;
+		}
+		
+		input[type="text"], input[type="email"], input[type="password"] {
+		width: 100%;
+		padding: 8px;
+		margin: 0 0 10px;
+		font-size: 14px;
+		color: #00ff00;
+		background-color: #ddd;
+		border: none;
+		border-radius: 5px;
+		box-sizing: border-box;
+		}
+		
+		button[type="submit"] {
+		display: block;
+		margin: 10px auto 0;
+		padding: 8px;
+		font-size: 16px;
+		font-weight: bold;
+		color: #00ff00;
+		background-color: #222;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		}
+		
+		button[type="submit"]:hover {
+		background-color: #444;
+		}
+		
+	</style>
+</head>
+<body>
+	<!-- Registration Page -->
+	<div id="registration">
+	<h2>Register</h2>
+	<input type="text" id="name" placeholder="Name" required>
+	<input type="email" id="email" placeholder="Email" required>
+	<input type="password" id="password" placeholder="Password" required>
+	<button id="register-btn">Register</button>
+	</div>
+	
+	<!-- Login Page -->
+	<div id="login">
+	<h2>Login</h2>
+	<input type="email" id="email" placeholder="Email" required>
+	<input type="password" id="password" placeholder="Password" required>
+	<button id="login-btn">Login</button>
+	</div>
+	
+</body>
+	<script type="text/javascript">
+		// Initialize Firebase
+		var firebaseConfig = {
+		apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+		authDomain: "telsan.firebaseapp.com",
+		databaseURL: "https://telsan.firebaseio.com",
+		projectId: "telsan",
+		storageBucket: "telsan.appspot.com",
+		messagingSenderId: "234399782199",
+		appId: "1:234399782199:web:b2cd11850ffe6e7404b6b2",		
+		};
+		
+		firebase.initializeApp(firebaseConfig);
+		
+		// Get elements
+		const registerForm = document.getElementById('registration');
+		const loginForm = document.getElementById('login');
+		
+		// Register Form
+		registerForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		
+		const name = registerForm['name'].value;
+		const email = registerForm['email'].value;
+		const password = registerForm['password'].value;
+		
+		// Create User
+		firebase.auth().createUserWithEmailAndPassword(email, password)
+		.then((userCredential) => {
+		// Add name to user
+		userCredential.user.updateProfile({
+		displayName: name
+		}).then(() => {
+		// Redirect to home page
+		window.location.href = "home.html";
+		})
+		.catch((error) => {
+		console.error(error);
+		alert(error);
+		});
+		})
+		.catch((error) => {
+		console.error(error);
+		alert(error);
+		});
+		});
+		
+		// Login Form
+		loginForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		
+		const email = loginForm['email'].value;
+		const password = loginForm['password'].value;
+		
+		// Sign In User
+		firebase.auth().signInWithEmailAndPassword(email, password)
+		.then((userCredential) => {
+		// Redirect to home page
+		window.location.href = "home.html";
+		})
+		.catch((error) => {
+		console.error(error);
+		alert(error);
+		});
+		});
+		
+	</script>
+</html>
