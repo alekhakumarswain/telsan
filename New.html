@@ -130,9 +130,12 @@
     	};
     	firebase.initializeApp(config);
     	
-    	// Get a reference to the chat messages collection in Firebase
-    	var messagesRef = firebase.database().ref("messages");
-    	
+    	// Get a reference to the Firebase database
+var database = firebase.database();
+
+// Get a reference to the "messages" collection in the database
+var messagesRef = database.ref("messages");
+
     	// Listen for new messages and add them to the chat display
     	messagesRef.orderByChild("timestamp").on("child_added", function(snapshot) {
     	var message = snapshot.val();
