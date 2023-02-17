@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<title>Chat App</title>
-	<meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-
+	<link rel="stylesheet" href="style.css">
 	<style type="text/css">
 		.message {
 		border: 1px solid #ddd;
@@ -34,7 +32,7 @@
 <body>
 	<div id="chat-messages"></div>
 	<form id="chat-form">
-		<label for="name">Name:</label>
+		<label for="name" id="name-label">Name:</label>
 		<input type="text" id="name" required>
 		<label for="message">Message:</label>
 		<input type="text" id="message" required>
@@ -42,18 +40,18 @@
 	</form>
 	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
-	
+	<script src="app.js"></script>
 	<script type="text/javascript">
 		// Initialize Firebase
 		var firebaseConfig = {
 		// your Firebase project configuration
-			apiKey: "AIzaSyAy51n8WrsAy8R-xbXNanqL9AHQFPtuiZY",
-  authDomain: "sufev7852.firebaseapp.com",
-  databaseURL: "https://sufev7852-default-rtdb.firebaseio.com",
-  projectId: "sufev7852",
-  storageBucket: "sufev7852.appspot.com",
-  messagingSenderId: "733657119988"
-};
+			apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+			authDomain: "telsan.firebaseapp.com",
+			databaseURL: "https://telsan.firebaseio.com",
+			projectId: "telsan",
+			storageBucket: "telsan.appspot.com",
+			messagingSenderId: "234399782199"
+		};
 		firebase.initializeApp(firebaseConfig);
 		var database = firebase.database();
 		
@@ -86,6 +84,8 @@
 		text: message
 		});
 		document.getElementById('message').value = '';
+		document.getElementById('name-label').style.display;
+		document.getElementById('name').style.display;
 		});
 		
 	</script>
