@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat App</title>
+	<link rel="stylesheet" href="style.css">
+	<style type="text/css">
+		.message {
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		margin-bottom: 10px;
+		padding: 10px;
+		}
+		
+		.name {
+		font-weight: bold;
+		margin-right: 5px;
+		}
+		
+		.time {
+		color: #999;
+		font-size: 12px;
+		margin-left: 5px;
+		}
+		
+		.text {
+		margin: 0;
+		}
+		
+		
+	</style>
+</head>
+<body>
+	<div id="chat-messages"></div>
+	<form id="chat-form">
+		<label for="name">Name:</label>
+		<input type="text" id="name" required>
+		<label for="message">Message:</label>
+		<input type="text" id="message" required>
+		<button type="submit">Send</button>
+	</form>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+	<script src="app.js"></script>
+	<script type="text/javascript">
+		// Initialize Firebase
+		var firebaseConfig = {
+		// your Firebase project configuration
+			apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
+			authDomain: "telsan.firebaseapp.com",
+			databaseURL: "https://telsan.firebaseio.com",
+			projectId: "telsan",
+			storageBucket: "telsan.appspot.com",
+			messagingSenderId: "234399782199"
+		};
+		firebase.initializeApp(firebaseConfig);
+		var database = firebase.database();
+		
+		// Retrieve chat messages from the database
+		database.ref('messages').on('value', function(snapshot) {
+		var messages = snapshot.val();
+		var messageList = '';
+		for (var key in messages) {
+		if (messages.hasOwnProperty(key)) {
+		var message = messages[key];
+		messageList += '<div class="message">';
+		messageList += '<span class="name">' + message.name + '</span>';
+		messageList += '<span class="time">' + message.time + '</span>';
+		messageList += '<p class="text">' + message.text + '</p>';
+		messageList += '</div>';
+		}
+		}
+		document.getElementById('chat-messages').innerHTML = messageList;
+		});
+		// Submit new message to the database
+		document.getElementById('chat-form').addEventListener('submit', function(event) {
+		event.preventDefault();
+		var name = document.getElementById('name').value;
+		var message = document.getElementById('message').value;
+		var timestamp = new Date().getTime();
+		var newMessageRef = database.ref('messages').push();
+		newMessageRef.set({
+		name: name,
+		time: timestamp,
+		text: message
+		});
+		document.getElementById('message').value = '';
+		});
+		
+	</script>
+</body>
+</html>
