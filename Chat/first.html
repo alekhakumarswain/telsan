@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mobile Friendly Page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<h1>Enter Your Store Name</h1>
+	<form>
+		<label for="store-name">Store Name:</label>
+		<input type="text" id="store-name">
+		<button type="submit">Save</button>
+	</form>
+
+	<script type="text/javascript">
+		// check if the localStorage is empty
+		if (!localStorage.getItem('myData')) {
+			// if it is empty, do nothing
+		} else {
+			// if it is not empty, redirect to the second page
+			window.location.href = 'second-page.html';
+		}
+
+		// save the store name to localStorage and redirect to second page
+		document.querySelector('form').addEventListener('submit', function(event) {
+			event.preventDefault();
+			const storeName = document.getElementById('store-name').value;
+			localStorage.setItem('myData', storeName);
+			window.location.href = 'second-page.html';
+		});
+	</script>
+</body>
+</html>
