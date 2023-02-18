@@ -11,23 +11,16 @@
       <p>Hi, <span id="name"></span>!</p>
     </div>
 
-    <script src="script.js">
-    	// get the name element
-    	const nameElement = document.getElementById('name');
-    	
-    	// get the name from local storage
-    	const name = localStorage.getItem('myName');
-    	
-    	// display the name on the page
-    	nameElement.textContent = name;
-    	
+    <script>
+    		var userName = localStorage.getItem('myName');
+    		document.getElementById('user-name').textContent = userName;    
     	if (!localStorage.getItem('myName')) {
     	// if local storage is empty, redirect to the first page
     	window.location.href = 'user.html';
     	} else {
     	// if local storage is not empty, do nothing
     	}
-    	
+    
     </script>
   </body>
 </html>
