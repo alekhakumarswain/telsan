@@ -1,89 +1,79 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Mobile-Friendly Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <style type="text/css">
-    	body {
-    	margin: 0;
-    	padding: 0;
-    	font-family: sans-serif;
-    	text-align: center;
-    	}
-    	h1 {
-    	margin-top: 30%;
-    	font-size: 3rem;
-    	}
-    	input[type="text"] {
-    	padding: 10px;
-    	border: none;
-    	border-bottom: 2px solid #ddd;
-    	margin-bottom: 20px;
-    	width: 70%;
-    	font-size: 1.2rem;
-    	transition: border-color 0.3s ease-in-out;
-    	}
-    	input[type="text"]:focus {
-    	border-color: #007bff;
-    	outline: none;
-    	}
-    	button {
-    	background-color: #007bff;
-    	color: #fff;
-    	padding: 10px 20px;
-    	border: none;
-    	border-radius: 5px;
-    	font-size: 1.2rem;
-    	cursor: pointer;
-    	transition: background-color 0.3s ease-in-out;
-    	}
-    	button:hover {
-    	background-color: #0056b3;
-    	}
-    	@media (min-width: 576px) {
-    	h1 {
-    	font-size: 5rem;
-    	}
-    	input[type="text"] {
-    	width: 50%;
-    	}
-    	}
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Welcome to My Site</h1>
-      <form id="myForm">
-        <input type="text" id="name" placeholder="Your name" required>
-        <br>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-
-    <script src="script.js">
-    	// check if the localStorage is empty
-    	if (!localStorage.getItem('myName')) {
-    	// if it is empty, do nothing
-    	} else {
-    	// if it is not empty, redirect to the second page
-    	window.location.href = 'second-page.html';
-    	}
-    	
-    	// get the form element
-    	const myForm = document.getElementById('myForm');
-    	
-    	// add event listener to the form
-    	myForm.addEventListener('submit', function(event) {
-	    	event.preventDefault();    	
-	    	// get the name input value
-	    	const name = document.getElementById('name').value;    	
-	    	// store the name in local storage
-	    	localStorage.setItem('myName', name);    	
-	    	// redirect to the second page
-	    	window.location.href = 'index.html';
-    	});
-    	
-    </script>
-  </body>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Welcome Page</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: sans-serif;
+			text-align: center;
+		}
+		h1 {
+			margin-top: 30%;
+			font-size: 3rem;
+		}
+		input[type="text"] {
+			padding: 10px;
+			border: none;
+			border-bottom: 2px solid #ddd;
+			margin-bottom: 20px;
+			width: 70%;
+			font-size: 1.2rem;
+			transition: border-color 0.3s ease-in-out;
+		}
+		input[type="text"]:focus {
+			border-color: #007bff;
+			outline: none;
+		}
+		button {
+			background-color: #007bff;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+		}
+		button:hover {
+			background-color: #0056b3;
+		}
+		@media (min-width: 576px) {
+			h1 {
+				font-size: 5rem;
+			}
+			input[type="text"] {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>Welcome to My Site</h1>
+	<form>
+		<label for="name">Enter Your Name:</label><br>
+		<input type="text" id="name" name="name" placeholder="John Doe" required><br>
+		<button type="submit" >Submit</button>
+	</form>
+	<script>
+		// check if the localStorage is empty
+		if (!localStorage.getItem('myData')) {
+		// if it is empty, do nothing
+		} else {
+		// if it is not empty, redirect to the second page
+		window.location.href = 'chat.html';
+		}
+		
+		// save the store name to localStorage and redirect to second page
+		document.querySelector('form').addEventListener('submit', function(event) {
+		event.preventDefault();
+		const Name = document.getElementById('name').value;
+		localStorage.setItem('myData', Name);
+		window.location.href = 'chat.html';
+		});
+	</script>
+</body>
 </html>
