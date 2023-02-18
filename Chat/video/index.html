@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Video Calling Online</title>
+	<!-- Firebase -->
+	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-analytics.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-storage.js"></script>
+	<!-- Twilio Video -->
+	<script src="https://media.twiliocdn.com/sdk/js/video/releases/2.16.0/twilio-video.min.js"></script>
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		#remote-video {
+			width: 100%;
+			height: auto;
+			max-height: 400px;
+			object-fit: cover;
+			margin-top: 20px;
+			border: 2px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+	<h1>Video Calling Online with Firebase and Twilio</h1>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<h2>Your Video</h2>
+				<video id="local-video" autoplay muted></video>
+			</div>
+			<div class="col-md-6">
+				<h2>Remote Video</h2>
+				<video id="remote-video" autoplay></video>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<button id="btn-join" class="btn btn-primary">Join Room</button>
+				<button id="btn-leave" class="btn btn-danger" disabled>Leave Room</button>
+			</div>
+		</div>
+	</div>
+	<!-- Firebase configuration -->
+	<script>
+		var firebaseConfig = {
+			apiKey: "AIzaSyAy51n8WrsAy8R-xbXNanqL9AHQFPtuiZY",
+			authDomain: "sufev7852.firebaseapp.com",
+			databaseURL: "https://sufev7852-default-rtdb.firebaseio.com",
+			projectId: "sufev7852",
+			storageBucket: "sufev7852.appspot.com",
+			messagingSenderId: "733657119988",
+			appId: "1:733657119988:web:7cfdf2d65de520ee21f2a1",
+			measurementId: "G-Q3CPLK309S"
+		};
+		// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+		firebase.analytics();
+	</script>
+	<!-- Twilio Video call -->
+	<script>
+		// Get a reference to the Twilio Video JavaScript SDK
+		const Video = Twilio.Video;
+
+		// Define global variables for the video room and local participant
+		let room, localParticipant;
+
+		// Get a reference to the local video element
+		const localVideo = document.getElementById('local-video');
+
+		// Get a reference to the remote video element
+		const remoteVideo = document.getElementById('remote-video');
+
+		// Get a reference to the Join Room and Leave Room buttons
+		const btnJoin = document.getElementById('btn-join');
+		const btnLeave = document.getElementById('btn-leave');
+
+		// Add an event listener to the Join Room button
+		btnJoin.addEventListener('click', () => {
+			// Disable the Join Room button
+			btnJoin.disabled = true;
+
+			// Get a reference to the Firebase
+		const db = firebase.firestore();
+		
+		// Create a new room document in Firestore with a unique ID
+		const roomRef = db.collection('rooms').doc();
+		roomRef.set({});
+		
+		// Create a new Twilio Video room with the unique room ID
+		Video.connect(roomRef.id, {audio: true, video: true, name: 'Firebase-Twilio Video Room'})
+			.then(newRoom => {
+				room = newRoom;
+				console.log(`Joined room ${room.name}`);
+		
+				// Add an event listener to the Leave Room button
+				btnLeave.disabled = false;
+				btnLeave.addEventListener('click', leaveRoom);
+		
+				// Create a new local participant and add it to the room
+				Video.createLocalVideoTrack().then(track => {
+					localVideo.srcObject = new MediaStream([track]);
+					localParticipant = room.localParticipant;
+					localParticipant.publishTrack(track);
+				});
+		
+				// Add an event listener for new remote participants
+				room.on('participantConnected', participant => {
+					console.log(`Participant ${participant.identity} connected`);
+		
+					// Subscribe to the remote participant's video track and add it to the remote video element
+					participant.on('trackSubscribed', track => {
+						remoteVideo.srcObject = track.mediaStreamTrack;
+					});
+				});
+			})
+			.catch(error => {
+				console.error(`Error joining room: ${error}`);
+			});
+			});
+		
+			// Function to leave the current room
+			function leaveRoom() {
+		// Disconnect from the room and remove all video tracks
+		room.disconnect();
+		localVideo.srcObject.getTracks().forEach(track => track.stop());
+		remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+		
+		// Enable the Join Room button and disable the Leave Room button
+		btnJoin.disabled = false;
+		btnLeave.disabled = true;
+			}
+		</script>
+	</body>
+</html>
