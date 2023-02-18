@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to my site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to my site!</h1>
+      <p>Hi, <span id="name"></span>!</p>
+    </div>
+
+    <script src="script.js">
+    	// get the name element
+    	const nameElement = document.getElementById('name');
+    	
+    	// get the name from local storage
+    	const name = localStorage.getItem('myName');
+    	
+    	// display the name on the page
+    	nameElement.textContent = name;
+    	
+    	if (!localStorage.getItem('myName')) {
+    	// if local storage is empty, redirect to the first page
+    	window.location.href = 'user.html';
+    	} else {
+    	// if local storage is not empty, do nothing
+    	}
+    	
+    </script>
+  </body>
+</html>
