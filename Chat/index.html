@@ -1,95 +1,84 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Chat App</title>
-	<link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <title>My Mobile-Friendly Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style type="text/css">
+    	body {
+    	margin: 0;
+    	padding: 0;
+    	font-family: sans-serif;
+    	text-align: center;
+    	}
+    	h1 {
+    	margin-top: 30%;
+    	font-size: 3rem;
+    	}
+    	input[type="text"] {
+    	padding: 10px;
+    	border: none;
+    	border-bottom: 2px solid #ddd;
+    	margin-bottom: 20px;
+    	width: 70%;
+    	font-size: 1.2rem;
+    	transition: border-color 0.3s ease-in-out;
+    	}
+    	input[type="text"]:focus {
+    	border-color: #007bff;
+    	outline: none;
+    	}
+    	button {
+    	background-color: #007bff;
+    	color: #fff;
+    	padding: 10px 20px;
+    	border: none;
+    	border-radius: 5px;
+    	font-size: 1.2rem;
+    	cursor: pointer;
+    	transition: background-color 0.3s ease-in-out;
+    	}
+    	button:hover {
+    	background-color: #0056b3;
+    	}
+    	@media (min-width: 576px) {
+    	h1 {
+    	font-size: 5rem;
+    	}
+    	input[type="text"] {
+    	width: 50%;
+    	}
+    	}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to My Site</h1>
+      <form id="myForm">
+        <input type="text" id="name" placeholder="Your name" required>
+        <br>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
 
-	<style type="text/css">
-		.message {
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		margin-bottom: 10px;
-		padding: 10px;
-		}
-		
-		.name {
-		font-weight: bold;
-		margin-right: 5px;
-		}
-		
-		.time {
-		color: #999;
-		font-size: 12px;
-		margin-left: 5px;
-		}
-		
-		.text {
-		margin: 0;
-		}
-		
-		
-	</style>
-</head>
-<body>
-	<div id="chat-messages"></div>
-	<form id="chat-form">
-		<label for="name" id="name-label">Name:</label>
-		<input type="text" id="name" required>
-		<label for="message">Message:</label>
-		<input type="text" id="message" required>
-		<button type="submit">Send</button>
-	</form>
-	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
-	<script src="app.js"></script>
-	<script type="text/javascript">
-		// Initialize Firebase
-		var firebaseConfig = {
-		// your Firebase project configuration
-			apiKey: "AIzaSyDYQDBNWLiGmE1qC4OXhcNI-jUiZQLlvGc",
-			authDomain: "telsan.firebaseapp.com",
-			databaseURL: "https://telsan.firebaseio.com",
-			projectId: "telsan",
-			storageBucket: "telsan.appspot.com",
-			messagingSenderId: "234399782199"
-		};
-		firebase.initializeApp(firebaseConfig);
-		var database = firebase.database();
-		
-		// Retrieve chat messages from the database
-		database.ref('messages').on('value', function(snapshot) {
-		var messages = snapshot.val();
-		var messageList = '';
-		for (var key in messages) {
-		if (messages.hasOwnProperty(key)) {
-		var message = messages[key];
-		messageList += '<div class="message">';
-		messageList += '<span class="name">' + message.name + '</span>';
-		messageList += '<span class="time">' + message.time + '</span>';
-		messageList += '<p class="text">' + message.text + '</p>';
-		messageList += '</div>';
-		}
-		}
-		document.getElementById('chat-messages').innerHTML = messageList;
-		});
-		// Submit new message to the database
-		document.getElementById('chat-form').addEventListener('submit', function(event) {
-		event.preventDefault();
-		var name = document.getElementById('name').value;
-		var message = document.getElementById('message').value;
-		var timestamp = new Date().getTime();
-		var newMessageRef = database.ref('messages').push();
-		newMessageRef.set({
-		name: name,
-		time: timestamp,
-		text: message
-		});
-		document.getElementById('message').value = '';
-		document.getElementById('name-label').style.display = "none";
-		document.getElementById('name').style.display = "none";
-		});
-		
-	</script>
-</body>
+    <script src="script.js">
+    	// get the form element
+    	const myForm = document.getElementById('myForm');
+    	
+    	// add event listener to the form
+    	myForm.addEventListener('submit', function(event) {
+    	event.preventDefault();
+    	
+    	// get the name input value
+    	const name = document.getElementById('name').value;
+    	
+    	// store the name in local storage
+    	localStorage.setItem('myName', name);
+    	
+    	// redirect to the second page
+    	window.location.href = 'index.html';
+    	});
+    	
+    </script>
+  </body>
 </html>
