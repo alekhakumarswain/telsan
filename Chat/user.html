@@ -60,7 +60,7 @@
 	</form>
 	<script>
 		// check if the localStorage is empty
-		if (!localStorage.getItem('myData')) {
+		if (!localStorage.getItem('mname')) {
 		// if it is empty, do nothing
 		} else {
 		// if it is not empty, redirect to the second page
@@ -71,7 +71,7 @@
 		document.querySelector('form').addEventListener('submit', function(event) {
 		event.preventDefault();
 		const Name = document.getElementById('name').value;
-		localStorage.setItem('myData', Name);
+		localStorage.setItem('mname', Name);
 		window.location.href = 'chat.html';
 		});
 	</script>
