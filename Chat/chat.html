@@ -162,7 +162,7 @@ var messagesRef = database.ref("messages");
     	var message = document.getElementById("chat-message").value;
     	if (message) {
     	messagesRef.push({
-    	name: localStorage.getItem('myData'),
+    	name: localStorage.getItem('mname'),
     	text: message,
     	timestamp: firebase.database.ServerValue.TIMESTAMP
     	});
