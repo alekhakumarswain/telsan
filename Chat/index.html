@@ -11,9 +11,9 @@
       <p>Hi, <span id="name"></span>!</p>
     </div>
 
-    <script>
-    		var userName = localStorage.getItem('myName');
-    		document.getElementById('user-name').textContent = userName;    
+      <script>
+    		var Name = localStorage.getItem('myName');
+    		document.getElementById('user-name').textContent = Name;    
     	if (!localStorage.getItem('myName')) {
     	// if local storage is empty, redirect to the first page
     	window.location.href = 'user.html';
