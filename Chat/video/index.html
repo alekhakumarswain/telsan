@@ -1,137 +1,109 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Video Calling Online</title>
-	<!-- Firebase -->
-	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-analytics.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-firestore.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-storage.js"></script>
-	<!-- Twilio Video -->
-	<script src="https://media.twiliocdn.com/sdk/js/video/releases/2.16.0/twilio-video.min.js"></script>
-	<!-- CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<style>
-		#remote-video {
-			width: 100%;
-			height: auto;
-			max-height: 400px;
-			object-fit: cover;
-			margin-top: 20px;
-			border: 2px solid #ccc;
-		}
-	</style>
-</head>
-<body>
-	<h1>Video Calling Online with Firebase and Twilio</h1>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<h2>Your Video</h2>
-				<video id="local-video" autoplay muted></video>
-			</div>
-			<div class="col-md-6">
-				<h2>Remote Video</h2>
-				<video id="remote-video" autoplay></video>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6">
-				<button id="btn-join" class="btn btn-primary">Join Room</button>
-				<button id="btn-leave" class="btn btn-danger" disabled>Leave Room</button>
-			</div>
-		</div>
-	</div>
-	<!-- Firebase configuration -->
-	<script>
-		var firebaseConfig = {
-			apiKey: "AIzaSyAy51n8WrsAy8R-xbXNanqL9AHQFPtuiZY",
-			authDomain: "sufev7852.firebaseapp.com",
-			databaseURL: "https://sufev7852-default-rtdb.firebaseio.com",
-			projectId: "sufev7852",
-			storageBucket: "sufev7852.appspot.com",
-			messagingSenderId: "733657119988",
-			appId: "1:733657119988:web:7cfdf2d65de520ee21f2a1",
-			measurementId: "G-Q3CPLK309S"
-		};
-		// Initialize Firebase
-		firebase.initializeApp(firebaseConfig);
-		firebase.analytics();
-	</script>
-	<!-- Twilio Video call -->
-	<script>
-		// Get a reference to the Twilio Video JavaScript SDK
-		const Video = Twilio.Video;
+  <head>
+    <title>WebRTC Video Call</title>
+  </head>
+  <body>
+    <h1>WebRTC Video Call</h1>
+    <video id="localVideo" autoplay muted style="width: 320px; height: 240px;"></video>
+    <video id="remoteVideo" autoplay style="width: 320px; height: 240px;"></video>
+    <br>
+    <button id="startButton">Start call</button>
+    <button id="hangupButton" disabled>End call</button>
 
-		// Define global variables for the video room and local participant
-		let room, localParticipant;
+    <script>
+      const startButton = document.getElementById("startButton");
+      const hangupButton = document.getElementById("hangupButton");
+      let localStream;
+      let remoteStream;
+      let localPeerConnection;
+      let remotePeerConnection;
 
-		// Get a reference to the local video element
-		const localVideo = document.getElementById('local-video');
+      // Set up media sources
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      })
+      .then((stream) => {
+        localStream = stream;
+        document.getElementById("localVideo").srcObject = localStream;
+      })
+      .catch((error) => {
+        console.error("Error accessing media devices.", error);
+      });
 
-		// Get a reference to the remote video element
-		const remoteVideo = document.getElementById('remote-video');
+      function startCall() {
+        startButton.disabled = true;
+        hangupButton.disabled = false;
 
-		// Get a reference to the Join Room and Leave Room buttons
-		const btnJoin = document.getElementById('btn-join');
-		const btnLeave = document.getElementById('btn-leave');
+        // Set up peer connections
+        localPeerConnection = new RTCPeerConnection();
+        remotePeerConnection = new RTCPeerConnection();
 
-		// Add an event listener to the Join Room button
-		btnJoin.addEventListener('click', () => {
-			// Disable the Join Room button
-			btnJoin.disabled = true;
+        // Add local stream to the first peer connection
+        localStream.getTracks().forEach((track) => {
+          localPeerConnection.addTrack(track, localStream);
+        });
 
-			// Get a reference to the Firebase
-		const db = firebase.firestore();
-		
-		// Create a new room document in Firestore with a unique ID
-		const roomRef = db.collection('rooms').doc();
-		roomRef.set({});
-		
-		// Create a new Twilio Video room with the unique room ID
-		Video.connect(roomRef.id, {audio: true, video: true, name: 'Firebase-Twilio Video Room'})
-			.then(newRoom => {
-				room = newRoom;
-				console.log(`Joined room ${room.name}`);
-		
-				// Add an event listener to the Leave Room button
-				btnLeave.disabled = false;
-				btnLeave.addEventListener('click', leaveRoom);
-		
-				// Create a new local participant and add it to the room
-				Video.createLocalVideoTrack().then(track => {
-					localVideo.srcObject = new MediaStream([track]);
-					localParticipant = room.localParticipant;
-					localParticipant.publishTrack(track);
-				});
-		
-				// Add an event listener for new remote participants
-				room.on('participantConnected', participant => {
-					console.log(`Participant ${participant.identity} connected`);
-		
-					// Subscribe to the remote participant's video track and add it to the remote video element
-					participant.on('trackSubscribed', track => {
-						remoteVideo.srcObject = track.mediaStreamTrack;
-					});
-				});
-			})
-			.catch(error => {
-				console.error(`Error joining room: ${error}`);
-			});
-			});
-		
-			// Function to leave the current room
-			function leaveRoom() {
-		// Disconnect from the room and remove all video tracks
-		room.disconnect();
-		localVideo.srcObject.getTracks().forEach(track => track.stop());
-		remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-		
-		// Enable the Join Room button and disable the Leave Room button
-		btnJoin.disabled = false;
-		btnLeave.disabled = true;
-			}
-		</script>
-	</body>
+        // Set up ICE candidates for the first peer connection
+        localPeerConnection.addEventListener("icecandidate", (event) => {
+          if (event.candidate) {
+            remotePeerConnection.addIceCandidate(event.candidate);
+          }
+        });
+
+        // Set up ICE candidates for the second peer connection
+        remotePeerConnection.addEventListener("icecandidate", (event) => {
+          if (event.candidate) {
+            localPeerConnection.addIceCandidate(event.candidate);
+          }
+        });
+
+        // Set up remote stream for the second peer connection
+        remotePeerConnection.addEventListener("track", (event) => {
+          remoteStream = event.streams[0];
+          document.getElementById("remoteVideo").srcObject = remoteStream;
+        });
+
+        // Create offer and answer
+        localPeerConnection.createOffer()
+        .then((offer) => {
+          return localPeerConnection.setLocalDescription(offer);
+        })
+        .then(() => {
+          return remotePeerConnection.setRemoteDescription(localPeerConnection.localDescription);
+        })
+        .then(() => {
+          return remotePeerConnection.createAnswer();
+        })
+        .then((answer) => {
+          return remotePeerConnection.setLocalDescription(answer);
+        })
+        .then(() => {
+          return localPeerConnection.setRemoteDescription(remotePeerConnection.localDescription);
+        })
+        .catch((error) => {
+          console.error("Error setting up peer connection.", error);
+        });
+      }
+
+      function endCall() {
+        hangupButton.disabled = true;
+        startButton.disabled = false;
+
+        // Close PeerConnections and stop streams
+        localPeerConnection.close();
+        remotePeerConnection.close();
+        localStream.getTracks().forEach((track) => {
+          track.stop();
+        });
+        document.getElementById("localVideo").srcObject = null;
+        document.getElementById("remoteVideo").srcObject = null;
+        remoteStream = null;
+      }
+
+      startButton.addEventListener("click", startCall);
+      hangupButton.addEventListener("click", endCall);
+    </script>
+  </body>
 </html>
